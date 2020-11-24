@@ -230,7 +230,7 @@ public class Console
 					  "Enter database directory (e.g. c:/tmp/foo)\n"
 					+ "Directory must exist." );
 			*/
-			databaseName = "C:\\dp2020";
+			databaseName = "C://dp2020";
 			if( databaseName == null )
 				System.exit(1);
 

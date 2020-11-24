@@ -18,14 +18,10 @@ public class HtmlExporter implements Table.Exporter{
         HEADER("thead", "tr", "th"),
         BODY("tbody", "tr", "td");
 
-        private String wrapper, rowContainer, cellContainer;
+        private final String wrapper, rowContainer, cellContainer;
         Type(String wrapper, String rowContainer, String cellContainer){
             this.wrapper = wrapper; this.rowContainer = rowContainer; this.cellContainer = cellContainer;
         }
-
-        public String getWrapper() { return wrapper; }
-        public String getRowContainer() { return rowContainer; }
-        public String getCellContainer() { return cellContainer; }
     }
 
     public HtmlExporter( Writer out ) {
@@ -37,22 +33,22 @@ public class HtmlExporter implements Table.Exporter{
         this.height = height;
         String tempTableName = tableName == null ? "" : tableName;
         out.write(String.format("<caption>%s</caption>", tempTableName));
+        out.write("<" + Type.HEADER.wrapper + ">");
         storeRowByType(columnNames, Type.HEADER);
+        out.write("</" + Type.HEADER.wrapper + ">");
+        out.write("<" + Type.BODY.wrapper + ">");
     }
 
-    public void storeRowByType(Iterator data, Type type) throws IOException{
-        int idx = width;
+    private void storeRowByType(Iterator data, Type type) throws IOException{
         StringBuilder headerStr = new StringBuilder();
-        headerStr.append("<").append(type.wrapper).append(">");
-            headerStr.append("<").append(type.getRowContainer()).append(">");
-                while(data.hasNext()){
-                    Object datum = data.next();
-                    headerStr.append("<").append(type.getCellContainer()).append(">");
-                        headerStr.append(datum.toString());
-                    headerStr.append("</").append(type.getCellContainer()).append(">");
-                }
-            headerStr.append("</").append(type.getRowContainer()).append(">");
-        headerStr.append("</").append(type.wrapper).append(">");
+        headerStr.append("<").append(type.rowContainer).append(">");
+            while(data.hasNext()){
+                Object datum = data.next();
+                headerStr.append("<").append(type.cellContainer).append(">");
+                    headerStr.append(datum.toString());
+                headerStr.append("</").append(type.cellContainer).append(">");
+            }
+        headerStr.append("</").append(type.rowContainer).append(">");
         out.write(headerStr.toString());
     }
 
@@ -71,6 +67,7 @@ public class HtmlExporter implements Table.Exporter{
     }
     @Override public void endTable() throws IOException {
         out.write(
+                                "</tbody>"+
                         "</table>"+
                         "</body>" +
                     "</html>"

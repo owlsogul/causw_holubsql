@@ -42,7 +42,7 @@ class HtmlExporterTest {
         Writer writer = new StringWriter();
         HtmlExporter tableBuilder = new HtmlExporter(writer);
         tableBuilder.endTable();
-        assertEquals(writer.toString(), "</tbody></table></body></html>");
+        assertEquals(writer.toString(), "<tbody></tbody></table></body></html>");
         writer.close();
     }
 
@@ -52,7 +52,7 @@ class HtmlExporterTest {
         Writer writer = new StringWriter();
         HtmlExporter tableBuilder = new HtmlExporter(writer);
         tableBuilder.storeRow(Arrays.stream(col).iterator());
-        assertEquals(writer.toString(), "<tr><td>First</td><td>Last</td></tr>");
+        assertEquals(writer.toString(), "<tbody><tr><td>First</td><td>Last</td></tr>");
         writer.close();
     }
 

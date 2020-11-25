@@ -10,7 +10,7 @@ import java.util.Iterator;
  *  1) docs 작성(저장되는 구조)
  *  2) 주석 작성. 1 항목과 비슷
  */
-public class HtmlExporter implements Table.Exporter{
+public class HtmlExporter extends SectionExporter{
     private final Writer out;
     private int width, height;
 
@@ -27,50 +27,54 @@ public class HtmlExporter implements Table.Exporter{
     public HtmlExporter( Writer out ) {
         this.out = out;
     }
+
+    private void storeRowByType(Iterator data, Type type) throws IOException{
+        StringBuilder rowStr = new StringBuilder();
+        rowStr.append("<").append(type.rowContainer).append(">");
+            while(data.hasNext()){
+                Object datum = data.next();
+                rowStr.append("<").append(type.cellContainer).append(">");
+                rowStr.append(datum.toString());
+                rowStr.append("</").append(type.cellContainer).append(">");
+            }
+        rowStr.append("</").append(type.rowContainer).append(">");
+        out.write(rowStr.toString());
+    }
+
     @Override
-    public void storeMetadata(String tableName, int width, int height, Iterator columnNames) throws IOException {
+    public void onStart() throws IOException {
+        out.write("<html><body><table>");
+    }
+
+    @Override
+    public void onMeta(String tableName, int width, int height, Iterator columnNames) throws IOException {
         this.width = width;
         this.height = height;
         String tempTableName = tableName == null ? "" : tableName;
+        StringBuilder headerStr = new StringBuilder();
         out.write(String.format("<caption>%s</caption>", tempTableName));
         out.write("<" + Type.HEADER.wrapper + ">");
         storeRowByType(columnNames, Type.HEADER);
         out.write("</" + Type.HEADER.wrapper + ">");
+    }
+
+    @Override
+    public void onDataStart() throws IOException {
         out.write("<" + Type.BODY.wrapper + ">");
     }
 
-    private void storeRowByType(Iterator data, Type type) throws IOException{
-        StringBuilder headerStr = new StringBuilder();
-        headerStr.append("<").append(type.rowContainer).append(">");
-            while(data.hasNext()){
-                Object datum = data.next();
-                headerStr.append("<").append(type.cellContainer).append(">");
-                    headerStr.append(datum.toString());
-                headerStr.append("</").append(type.cellContainer).append(">");
-            }
-        headerStr.append("</").append(type.rowContainer).append(">");
-        out.write(headerStr.toString());
-    }
-
-
     @Override
-    public void storeRow(Iterator data) throws IOException {
+    public void onDataRow(Iterator data) throws IOException {
         storeRowByType(data, Type.BODY);
     }
 
-    @Override public void startTable() throws IOException {
-        out.write(
-                "<html>" +
-                        "<body>" +
-                            "<table>"
-        );
+    @Override
+    public void onDataEnd() throws IOException {
+        out.write("</" + Type.BODY.wrapper + ">");
     }
-    @Override public void endTable() throws IOException {
-        out.write(
-                                "</tbody>"+
-                        "</table>"+
-                        "</body>" +
-                    "</html>"
-        );
+
+    @Override
+    public void onEnd() throws IOException {
+        out.write("</table></body></html>");
     }
 }

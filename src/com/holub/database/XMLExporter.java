@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class XMLExporter extends SectionExporter{
 
-    private final Writer writer;
+    private Writer writer;
     private String version, charset;
     public XMLExporter(Writer writer){ this(writer, "1.0", "UTF-8"); }
     public XMLExporter(Writer writer, String version, String charset){
@@ -19,11 +19,12 @@ public class XMLExporter extends SectionExporter{
             Object datum = data.next();
             writer.write("<item>" + datum.toString() + "</item>");
         }
+        writer.write(String.format("</%s>", label));
     }
 
     @Override
     public void onStart() throws IOException {
-        writer.write(String.format("<?xml version=\"%s\" charset=\"%s\"?>", version, charset));
+        writer.write(String.format("<?xml version=\"%s\" encoding=\"%s\"?>", version, charset));
         writer.write("<table>");
     }
 

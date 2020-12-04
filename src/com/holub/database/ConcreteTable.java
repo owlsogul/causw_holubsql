@@ -75,7 +75,8 @@ import com.holub.tools.ArrayIterator;
 	 */
 	public ConcreteTable(String tableName, String[] columnNames) {
 		this.tableName = tableName;
-		this.columnNames = (String[]) columnNames.clone();
+		this.columnNames = (String[]) columnNames.clone(); // Null Pointer Exception
+
 	}
 
 	/**********************************************************************
@@ -567,6 +568,9 @@ import com.holub.tools.ArrayIterator;
 
 			while (column.hasNext())
 				columnNames[i++] = column.next().toString();
+		}
+		else { // SELECT *
+			columnNames = this.columnNames.clone();
 		}
 
 		if (other != null)

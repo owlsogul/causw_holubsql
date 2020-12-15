@@ -128,6 +128,11 @@ import com.holub.tools.ArrayIterator;
 		isDirty = false;
 	}
 
+	@Override
+	public void accept(TableVisitor visitor) {
+		visitor.visit(this);
+	}
+
 	// @import-export-end
 	// ----------------------------------------------------------------------
 	// Inserting

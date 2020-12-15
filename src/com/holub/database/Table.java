@@ -289,4 +289,6 @@ public interface Table extends Serializable, Cloneable
 		Iterator loadRow()			throws IOException;
 		void 	 endTable()			throws IOException;
 	}
+
+	public void accept(TableVisitor visitor);
 }

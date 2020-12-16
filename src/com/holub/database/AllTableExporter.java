@@ -46,7 +46,7 @@ public class AllTableExporter implements TableVisitor {
         testTables[1].insert(new String[] {"b", "a", "b"});
         testTables[1].insert(new String[] {"b", "b", "b"});
 
-        TableVisitor visitor = new AllTableExporter(new File("W://out"));
+        TableVisitor visitor = new AllTableExporter(new File("C://dp2020"));
         for (Table table : testTables){
             table.accept(visitor);
         }

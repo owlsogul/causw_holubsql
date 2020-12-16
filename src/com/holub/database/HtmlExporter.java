@@ -6,9 +6,9 @@ import java.util.Iterator;
 
 /**
  *
- * TODO:
- *  1) docs 작성(저장되는 구조)
- *  2) 주석 작성. 1 항목과 비슷
+ * Html Exporter.
+ * HTML 형식으로 테이블을 Export 하는 클래스.
+ *
  */
 public class HtmlExporter extends SectionExporter{
     private final Writer out;
